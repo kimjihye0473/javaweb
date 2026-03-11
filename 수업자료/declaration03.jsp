@@ -1,5 +1,6 @@
 <html>
 <head>
+c
 <title>Scripting Tag</title>
 </head>
 <body>
@@ -7,7 +8,7 @@
 		return data.toLowerCase();
 	}%>
 	<%
-		out.println(makeItLower("Hello World"));
+		out.println(makeItLower("Hello java server pages"));
 	%>
 </body>
 </html>
