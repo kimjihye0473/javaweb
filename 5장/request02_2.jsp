@@ -1,0 +1,20 @@
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Implicit Objects</title>
+</head>
+<body>
+	<form action="request_process2.jsp" method=post>
+		<p>
+			아 이 디 : <input type="text" name="id">
+		<p>
+			비밀번호 : <input type="text" name="password">
+		<p>
+			이 름 : <input type="text" name="name">
+		<p>
+			학 번 : <input type="text" name="sd">
+		<p>
+			<input type="submit" value="전송" />
+	</form>
+</body>
+</html>
