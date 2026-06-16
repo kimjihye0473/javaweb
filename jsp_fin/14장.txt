@@ -1,0 +1,157 @@
+14장
+
+cookie01
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Cookie</title>
+</head>
+<body>
+	<form action="cookie01_process.jsp" method="POST">
+		<p>아 이 디 : <input type="text" name="id">
+		<p>비밀번호 : <input type="text" name="passwd">
+		<p><input type="submit" value="전송">
+	</form>
+</body>
+</html>
+
+cookie01_process
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Cookie</title>
+</head>
+<body>
+	<%
+		String user_id = request.getParameter("id");
+		String user_pw = request.getParameter("passwd");
+
+		if (user_id.equals("admin") && user_pw.equals("1234")) {
+			Cookie cookie_id = new Cookie("userID", user_id);
+			Cookie cookie_pw = new Cookie("userPW", user_pw);
+			response.addCookie(cookie_id);
+			response.addCookie(cookie_pw);
+			out.println("쿠기 생성이 성공했습니다<br>");
+			out.println(user_id + "님 환영합니다");
+		} else {
+			out.println("쿠티 생성이 실패했습니다");
+		}
+	%>
+</body>
+</html>
+
+cookie02
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Cookie</title>
+</head>
+<body>
+	<%
+		Cookie[] cookies = request.getCookies();
+
+		out.println("현재 설정된 쿠키의 개수 => " + cookies.length + "<br>");
+		out.println("==========================<br>");
+
+		for (int i = 0; i < cookies.length; i++) {
+			out.println("설정된 쿠티의 속성 이름 [ " + i + " ] : " + cookies[i].getName() + "<br>");
+			out.println("설정된 쿠키의 속성 값 [ " + i + " ] : " + cookies[i].getValue() + "<br>");
+			out.println("---------------------------------------------<br>");
+		}
+	%>
+</body>
+</html>
+
+cookie03
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Cookie</title>
+</head>
+<body>
+	<%
+		Cookie[] cookies = request.getCookies();
+
+		for (int i = 0; i < cookies.length; i++) {
+			cookies[i].setMaxAge(0);
+			response.addCookie(cookies[i]);
+		}
+		response.sendRedirect("cookie02.jsp");
+	%>
+</body>
+</html>
+
+cookie_process2
+<%@ page contentType="text/html; charset=utf-8"%>
+<%@ page import="java.util.Calendar"%>
+<%@ page import="java.util.GregorianCalendar"%>
+<html>
+<head>
+	<title>Cookie</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap.min.css">
+</head>
+<body>
+	<%
+		String user_id = request.getParameter("id");
+		String user_pw = request.getParameter("passwd");
+
+		if (user_id.equals("admin") && user_pw.equals("admin1234")) {
+			Cookie cookie_id = new Cookie("userID", user_id);
+			Cookie cookie_pw = new Cookie("userPW", user_pw);
+			cookie_id.setMaxAge(60*60);
+			response.addCookie(cookie_id);
+			response.addCookie(cookie_pw);	
+			
+			Calendar calendar = new GregorianCalendar();
+			int year = calendar.get(Calendar.YEAR);
+			int month = calendar.get(Calendar.MONTH) + 1;
+			int date = calendar.get(Calendar.DATE);
+			int hour = calendar.get(Calendar.HOUR_OF_DAY);
+			int minute = calendar.get(Calendar.MINUTE);
+			%>
+			
+			<div class="container mt-4 text-center">
+				<hr style="width:80%; margin:auto;">
+				<br>
+		
+				<p>
+					오늘은 <%=year%>-<%=month%>-<%=date%>일 입니다.<br>
+					현재 시각은 <%=hour%>:<%=minute%> 분 입니다. <br>
+					<span class="badge text-bg-success">
+					<%=user_id%>
+					</span>님 쿠키 설정이 성공했습니다.
+				</p>
+		
+				<hr style="width:80%; margin:auto;">
+				<br>
+		
+				<a href="welcome2.jsp" class="btn btn-outline-primary">다음 페이지로 이동</a>
+				
+			</div>
+		<%
+		} else {
+		%>
+		
+		<br>
+		<hr style="width:80%; margin:auto;">
+		<br>
+		
+		<div class="text-center">
+			<span class="badge text-bg-danger">아이디와 비밀번호를 확인해 주세요</span>
+		</div>
+		
+		<br>
+		<hr style="width:80%; margin:auto;">
+		<br>
+		
+		<div class="text-center">
+			<a href="cookie2.jsp" class="btn btn-outline-primary">처음으로 이동</a>
+		</div>
+		<%
+			}
+		%>
+
+<script src="../bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

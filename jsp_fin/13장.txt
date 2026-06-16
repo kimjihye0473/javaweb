@@ -1,0 +1,346 @@
+13장
+
+session
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Session</title>
+</head>
+<body>
+	<form action="session_process.jsp" method="POST">
+		<p>	아 이 디 : <input type="text" name="id">
+		<p> 비밀번호 : <input type="text" name="passwd">
+		<p>	<input type="submit" value="전송">
+	</form>
+</body>
+</html>
+
+session2
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Session</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet"
+	href="../bootstrap-5.3.3-dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container py-4">
+	<form action="session_process2.jsp" method="POST">
+		<div class="row mb-3">
+		    <label for="inputEmail3" class="col-sm-2 col-form-label">아이디</label>
+		    <div class="col-sm-5">
+		      <input type="text" class="form-control" name="id">
+		    </div>
+		</div>
+		<div class="row mb-3">
+		    <label for="inputPassword3" class="col-sm-2 col-form-label">비밀번호</label>
+		    <div class="col-sm-5">
+		      <input type="password" class="form-control" name="passwd">
+		    </div>
+		</div>
+	
+		<p>	<button type="submit" class="btn btn-primary">전송</button>
+	</form>
+</div>
+<script src="../bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+session_out
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Session</title>
+</head>
+<body>
+	<%
+		session.invalidate();
+		response.sendRedirect("session.jsp");
+	%>
+
+</body>
+</html>
+
+session_out2
+<%@ page contentType="text/html; charset=utf-8"%>
+<%@ page import="java.util.Enumeration"%>
+<html>
+<head>
+<title>Session</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet"
+	href="../bootstrap-5.3.3-dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-4">
+
+	<h5>세션 삭제하기 전</h5>
+
+	<%
+		Enumeration names = session.getAttributeNames();
+
+		int i = 1;
+
+		while (names.hasMoreElements()) {
+			String name = (String) names.nextElement();
+			String value = (String) session.getAttribute(name);
+	%>
+			<p>
+				설정된 세션의 속성 이름 [<%=i%>] :
+				<span class="badge text-bg-primary"><%=name%></span>
+				<br>
+				설정된 세션의 속성 값 [<%=i%>] :
+				<span class="badge text-bg-success"><%=value%></span>
+			</p>
+	<%
+			i++;
+		}
+		session.invalidate(); // 싹 다 삭제
+	%>
+
+	<br>
+	<h5>세션 삭제한 후</h5>
+	
+	<% 
+		if(request.isRequestedSessionIdValid()==true){
+	%>
+	<span class="badge text-bg-primary">세션이 유효합니다.</span>
+	<% 
+	} else {
+	%>
+	<span class="badge text-bg-primary">세션이 유효하지 않습니다.</span>
+	<% } %>
+
+	<br><br>
+
+	<hr style="width:100%; margin:auto;">
+
+	<div class="text-end my-3" style="margin-right:20%;">
+		<a href="welcome.jsp" class="btn btn-outline-primary">홈 돌아가기</a>
+	</div>
+
+	<hr style="width:100%; margin:auto;">
+
+</div>
+
+<script src="../bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+session_process
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Session</title>
+</head>
+<body>
+	<%
+		String user_id = request.getParameter("id");
+		String user_pw = request.getParameter("passwd");
+
+		if (user_id.equals("admin") && user_pw.equals("admin1234")) {
+			session.setAttribute("userID", user_id);			
+			response.sendRedirect("welcome1.jsp");
+		} else {
+			out.println("아이디와 비밀번호를 확인해 주세요");
+		}
+	%>
+	
+</body>
+</html>
+
+session_process2
+<%@ page contentType="text/html; charset=utf-8"%>
+<%@ page import="java.util.Calendar"%>
+<%@ page import="java.util.GregorianCalendar"%>
+<html>
+<head>
+<title>Session</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet"
+	href="../bootstrap-5.3.3-dist/css/bootstrap.min.css">
+</head>
+<body>
+	<%
+	String user_id = request.getParameter("id");
+	String user_pw = request.getParameter("passwd");
+
+	if (user_id.equals("admin") && user_pw.equals("admin1234")) {
+		session.setAttribute("userID", user_id);
+		session.setAttribute("userPW", user_pw);
+
+		Calendar calendar = new GregorianCalendar();
+
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH) + 1;
+		int date = calendar.get(Calendar.DATE);
+		int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		int minute = calendar.get(Calendar.MINUTE);
+		int second = calendar.get(Calendar.SECOND);
+	%>
+
+	<div class="container mt-4 text-center">
+		<hr style="width:80%; margin:auto;">
+		<br>
+
+		<p>
+			<%=year%>년<%=month%>월<%=date%>일<%=hour%>시<%=minute%>분<%=second%>초
+		</p>
+
+		<p>
+			<span class="badge text-bg-success"><%=user_id%></span>
+			님 세션 설정이 성공했습니다.
+		</p>
+
+		<hr style="width:80%; margin:auto;">
+		<br>
+
+		<a href="welcome2.jsp" class="btn btn-outline-primary">
+			다음 페이지로 이동
+		</a>
+	</div>
+
+	<%
+	} else {
+	%>
+
+	<br>
+	<hr style="width:80%; margin:auto;">
+	<br>
+
+	<div class="text-center">
+		<span class="badge text-bg-danger">
+			아이디와 비밀번호를 확인해 주세요
+		</span>
+	</div>
+
+	<br>
+	<hr style="width:80%; margin:auto;">
+	<br>
+
+	<div class="text-center">
+		<a href="session2.jsp" class="btn btn-outline-primary">
+			처음으로 이동
+		</a>
+	</div>
+
+	<%
+	}
+	%>
+
+<script src="../bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+welcome1
+<%@ page contentType="text/html; charset=utf-8"%>
+<html>
+<head>
+<title>Session</title>
+</head>
+<body>
+	<%  
+    if (session.getAttribute("userID") == null) {
+        response.sendRedirect("session_out.jsp");
+    }
+	%>
+	<h4><%= session.getAttribute("userID") %>님 반갑습니다.</h4>
+	<a href="session_out.jsp">로그아웃</a>
+
+
+</body>
+</html>
+
+welcome2
+<%@ page contentType="text/html; charset=utf-8"%>
+<%@ page import="java.util.*"%>
+<html>
+<head>
+<title>Session</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet"
+	href="../bootstrap-5.3.3-dist/css/bootstrap.min.css">
+</head>
+<body>
+	<%
+	if (session.getAttribute("userID") == null) {
+		response.sendRedirect("session_out.jsp");
+	}
+
+	Enumeration names = session.getAttributeNames();
+	int i = 1;
+	%>
+
+	<div class="container mt-4">
+		<hr>
+
+		<%
+		while (names.hasMoreElements()) {
+			String name = (String) names.nextElement();
+			String value = (String) session.getAttribute(name);
+		%>
+
+		<div class="mb-2">
+			<div>
+				설정된 세션의 속성 이름 [<%=i%>] :
+				<span class="badge text-bg-primary"><%=name%></span>
+			</div>
+			<div>
+				설정된 세션의 속성 값 [<%=i%>] :
+				<span class="badge text-bg-success"><%=value%></span>
+			</div>
+		</div>
+
+		<%
+			i++;
+		}
+		%>
+
+		<br>
+
+		<h4>
+			<span class="badge text-bg-success"><%=session.getAttribute("userID")%></span>
+			님 반갑습니다.
+		</h4>
+
+		<hr>
+
+		<a href="session_out2.jsp" class="btn btn-outline-primary">로그아웃</a>
+	</div>
+
+	<script src="../bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
